@@ -53,14 +53,12 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner.valueOf() !== _id) {
         throw new ForbiddenError(MOVIE_FORBIDDEN_MSG);
       }
-      Movie.findByIdAndRemove(movieId)
-        .then(() => res.status(OK).send({ message: MOVIE_DELETE_MSG }))
-        .catch(next);
+      return movie.deleteOne();
+    })
+    .then((deleteMovie) => {
+      res.send({ message: MOVIE_DELETE_MSG, deleteMovie });
     })
     .catch((err) => {
-      if (err instanceof NotFoundError) {
-        return next(err);
-      }
       if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError(MOVIE_WRONG_ID_MSG));
       }

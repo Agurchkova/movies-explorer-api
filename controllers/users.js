@@ -111,6 +111,9 @@ function updateInfo(res, next, id, props) {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError(USER_UPDATE_WRONG_DATA_MSG));
       }
+      if (err.code === 11000) {
+        return next(new ConflictError(SIGNUP_CONFLICT_MSG));
+      }
       return next(err);
     });
 }

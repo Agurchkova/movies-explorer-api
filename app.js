@@ -3,10 +3,10 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
+const limiter = require('./middlewares/limiter');
 const allRouters = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 const { PORT, DB_ADDRESS } = require('./config');
@@ -36,10 +36,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // за 15 минут
-  max: 100, // можно совершить максимум 100 запросов с одного IP
-});
 app.use(limiter);
 
 // роуты, которым авторизация нужна
@@ -55,4 +51,3 @@ app.use(errorLogger);
 // обработчики ошибок
 app.use(errors());
 app.use(errorHandler);
-
