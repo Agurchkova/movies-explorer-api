@@ -26,8 +26,8 @@ const PAGE_NOT_EXIST_MSG = 'Запрашиваемая страница не с�
 const allowedCors = [
   'http://agurchkova.movies.nomoredomains.rocks',
   'https://agurchkova.movies.nomoredomains.rocks',
-  'http://158.160.37.182',
-  'https://158.160.37.182',
+  'http://51.250.72.179',
+  'https://51.250.72.179',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
