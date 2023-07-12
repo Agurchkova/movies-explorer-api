@@ -8,10 +8,10 @@ const {
 const { NODE_ENV, JWT_SECRET } = require('../config');
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const { authorization } = req.headers;
 
-  if (!token) {
-    return next(new UnauthorizedError(AUTHORIZATION_MSG));
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new UnauthorizedError(AUTHORIZATION_MSG);
   }
 
   let payload;
