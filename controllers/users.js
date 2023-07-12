@@ -28,7 +28,9 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      // создание токена
+      if (!user || !password) {
+        return next(new BadRequestError('Неверные почта или пароль'));
+      }
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : jwtKey,
@@ -36,19 +38,9 @@ module.exports.login = (req, res, next) => {
           expiresIn: '7d',
         },
       );
-      res.cookie('jwt', token, {
-        maxAge: 3600000,
-        httpOnly: true,
-        sameSite: true,
-      }).send({ message: SIGNIN_MSG });
+      return res.send({ token });
     })
     .catch(next);
-};
-
-// logout
-module.exports.logout = (req, res) => {
-  res.clearCookie('jwt');
-  res.send({ message: SIGNOUT_MSG });
 };
 
 // createUser
